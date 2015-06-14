@@ -21,7 +21,7 @@ class coin
 {
 private:
 	string state;
-	struct tm& t;
+	timediff stime;
 	int id;
 	struct tm& getcurrenttime();
 public:

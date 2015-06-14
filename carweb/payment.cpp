@@ -1,11 +1,5 @@
 #include "payment.h"
 
-
-payment::payment()
-{
-}
-
-
 payment::~payment()
 {
 }

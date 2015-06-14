@@ -12,7 +12,7 @@ carweb::~carweb()
 
 extern "C"
 {
-	carpark carPark;
+	carpark carPark(5);
 	coinmachine machine;
 	ExitBarrier exitdoor;
 	EntryBarrier enterdoor;
@@ -21,13 +21,13 @@ extern "C"
 	// The purpose of this private object is to store coins collected by drivers from the coin machine upon their entry to the car park.
 	vector<coin> CollectedCoins;
 	int exitindex;
-	extern "C" void setfulltext(const char* text);// Pointer_stringify(text)
-	extern "C" void setAvailableCoinsText(const char* text);// Pointer_stringify(text)
-	extern "C" void setAvailableSpacesText(const char* text);// Pointer_stringify(text)
-	extern "C" void setEntryBarrierText(const char* text);// Pointer_stringify(text)
-	extern "C" void setExitBarrierTextp(const char* text);// Pointer_stringify(text)
-	extern "C" void setCoinMachineText(const char* text);// Pointer_stringify(text)
-	extern "C" void setPaymentDisplayText(const char* text);// Pointer_stringify(text)
+	extern void setfulltext(const char* text);// Pointer_stringify(text)
+	extern void setAvailableCoinsText(const char* text);// Pointer_stringify(text)
+	extern void setAvailableSpacesText(const char* text);// Pointer_stringify(text)
+	extern void setEntryBarrierText(const char* text);// Pointer_stringify(text)
+	extern void setExitBarrierTextp(const char* text);// Pointer_stringify(text)
+	extern void setCoinMachineText(const char* text);// Pointer_stringify(text)
+	extern void setPaymentDisplayText(const char* text);// Pointer_stringify(text)
 	void setbtnCarArrivesv(bool visible)
 	{
 		EM_ASM_({
@@ -181,15 +181,37 @@ extern "C"
 				document.getElementById("btnInsert2Pound").style.display = "block";
 		}, visible);
 	}
+	
+	// This procedure updates the listbox that contains coins collected by drivers after entering the car park
+	void UpdateCoinsDisplay()
+	{
+
+		for (coin it : CollectedCoins)
+		{
+			cout << "Coin " << it.getid() << endl;
+		}
+	}
+
+	void UpdateDisplay()
+	{
+		setfulltext(full.getstate().c_str());// "full" or "avalible"
+		setAvailableCoinsText(to_string(machine.getnumberofcoins()).c_str());  // coins avalible to give
+		setAvailableSpacesText(to_string(carPark.getAvailableSpace()).c_str()); // a number between the the size of the car park and 0
+		setEntryBarrierText(enterdoor.getstate().c_str());    // am i up or down
+		setExitBarrierTextp(exitdoor.getstate().c_str()); // am i up or down
+		setCoinMachineText(machine.getmessage().c_str());
+		setPaymentDisplayText(paymachine.getrequiredbalence().c_str());
+		UpdateCoinsDisplay();
+	}
+
 	int main()
 	{
 		// All the objects, which are used in the application, are initialiased here.
-		carPark = new carpark(5);
-		machine = new coinmachine();
-		exitdoor = new ExitBarrier();
-		enterdoor = new EntryBarrier();
-		full = new FullSign();
-		paymachine = new payment();
+		machine = coinmachine();
+		exitdoor = ExitBarrier();
+		enterdoor = EntryBarrier();
+		full = FullSign();
+		paymachine = payment();
 
 		//  TO BE COMPLETED BY YOU
 		// add event lisener for buttions
@@ -329,34 +351,13 @@ extern "C"
 		setbtnExitCarParkv(false);
 		if (carPark.getAvailableSpace() != carPark.getTotalSpace())
 			setbtnCarArrivesAtExitv(true);
-		if (carPark.hasAvailableSpaces() && EM_ASM_INT("btnPressForCoin.Visible") == 0 && EM_ASM_INT("btnEnterCarPark.Visible") == 0)
+		if (carPark.hasAvailableSpaces() && emscripten_run_script_int(
+			"			if (document.getElementById('btnPressForCoin').style.visibility = 'hidden')				return 1;else return 0;") == 0 && emscripten_run_script_int(" if (document.getElementById('btnEnterCarPark').style.visibility = 'hidden') return 1; else return 0;") == 0)
 			setbtnCarArrivesv(true);
 		if (carPark.getAvailableSpace() == carPark.getTotalSpace())
 			setbtnInsertCoinv(false);
 
 		UpdateDisplay();
-	}
-
-	void UpdateDisplay()
-	{
-		setfulltext(full.getstate().c_str());// "full" or "avalible"
-		setAvailableCoinsText(to_string(machine.getnumberofcoins()).c_str());  // coins avalible to give
-		setAvailableSpacesText(to_string(carPark.getAvailableSpace()).c_str()); // a number between the the size of the car park and 0
-		setEntryBarrierText(enterdoor.getstate().c_str());    // am i up or down
-		setExitBarrierTextp(exitdoor.getstate().c_str()); // am i up or down
-		setCoinMachineText(machine.getmessage().c_str());
-		setPaymentDisplayText(paymachine.getrequiredbalence().c_str());
-		UpdateCoinsDisplay();
-	}
-
-	// This procedure updates the listbox that contains coins collected by drivers after entering the car park
-	void UpdateCoinsDisplay()
-	{
-		
-		for(coin it : CollectedCoins)
-		{
-			cout << "Coin " << it.getid() << endl;
-		}
 	}
 
 	void btnInsertCoin_Click()
@@ -367,6 +368,12 @@ extern "C"
 		paymachine.setcoinid(number);
 		UpdateDisplay();
 		setbtnCalculateValuev(true);
+	}
+
+	void cangetcoin()
+	{
+		if (paymachine.haspayedinfull())
+			setbtnRequestCoinv(true);
 	}
 
 	void btnInsert1Pound_Click()
@@ -388,11 +395,6 @@ extern "C"
 		paymachine.insert10p();
 		cangetcoin();
 		UpdateDisplay();
-	}
-	void cangetcoin()
-	{
-		if (paymachine.haspayedinfull())
-			setbtnRequestCoinv(true);
 	}
 
 	void btnCalculateValue_Click()

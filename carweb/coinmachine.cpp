@@ -15,7 +15,7 @@ void coinmachine::entercoin(coin item)
 }
 void coinmachine::cararives()
 { //give user a coin
-	coines.push_back(new coin(coines.size()));
+	coines.push_back(coin(coines.size()));
 }
 void coinmachine::carexits()
 {// remove users coin

@@ -11,7 +11,7 @@ private:
 	double requiredmoney;
 	void calculateAmountRemaining(double coinInserted);
 public:
-	payment();
+	payment() : insertedcoin(-1){};
 	~payment();
 	void setcoinid(int id);
 	int getcoinid();
