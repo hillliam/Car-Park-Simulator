@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Copyright © Liam Hill, Joe Leach, Joe Guz 2015
+using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using Microsoft.VisualBasic;

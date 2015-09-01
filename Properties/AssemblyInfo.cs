@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿// Copyright © Liam Hill, Joe Leach, Joe Guz 2015
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -6,11 +7,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Car Park Simulator")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("car park ticket machine simulator")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Car Park Simulator")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright(" Copyright © Liam Hill, Joe Leach, Joe Guz 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

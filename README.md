@@ -1,6 +1,6 @@
 # car park simulator
  IRSM Group Project
-Liam Hill, joe leach, joe guz
+Liam Hill, Joe Leach, Joe Guz
 -----------------------------
 
 c# car park simulator writen for one of the IRSM Group Project's 
