@@ -1,5 +1,5 @@
 language: csharp
-solution: Car Park Simulator.sln
+solution: "Car Park Simulator.sln"
 
 notifications:
   email: true
