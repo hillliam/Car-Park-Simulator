@@ -3,3 +3,8 @@ solution: "Car Park Simulator.sln"
 
 notifications:
   email: true
+
+before_install:
+  - pip install codecov
+after_success:
+  - codecov
