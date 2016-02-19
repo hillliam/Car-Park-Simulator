@@ -1,6 +1,8 @@
 language: csharp
 solution: "Car Park Simulator.sln"
 
+sudo: required
+
 notifications:
   email: true
 
